@@ -12,6 +12,7 @@ if ( !defined("ABSPATH") ) {
     exit;
 }
 class PlifeProductBrands {
+    private $db;
     public function __construct()
     {
         if( is_admin() )
@@ -47,7 +48,14 @@ class PlifeProductBrands {
             <h2>Product Brands</h2>
         </div>
         <hr>
-        <div class="home-page-builder-group-container">
+        <div class="product-brands-container">
+            <div class="product-brands-new">
+                <form method="post">
+                    <input type="text">
+                    <button type="submit" name="new-brand">add new </button>
+                </form>
+            </div>
+        <div class="product-brands-list-item">
             <div class="button-container">
                 <a href="?page=home-page-builder&process=add"><input type="button" value="Add New" class="button-primary"> </a>
             </div>
@@ -78,6 +86,7 @@ class PlifeProductBrands {
                 ?>
                 </tbody>
             </table>
+        </div>
         </div>
         <?php
 

@@ -30,6 +30,12 @@ class PlifeProductBrands
         add_action('admin_post_product_brands_add_brand', array($this, 'prefix_product_brands_add_brand'));
 
         add_action('admin_enqueue_scripts', array($this, "required_files"));
+
+        if(isset($_GET['page']) && $_GET['page'] == 'product-brands' && isset($_GET['process']) && $_GET['process'] == 'remove' ) {
+            if( isset($_GET['id']) && !empty($_GET['id']) ) {
+                $this->db->remove_post((int)$_GET['id']);
+            }
+        }
     }
 
     function required_files()
@@ -54,11 +60,11 @@ class PlifeProductBrands
         if (isset($_POST['action']) && $_POST['action'] == "product_brands_add_brand" && isset($_POST['title']) && !empty($_POST['title'])) {
             //echo $_POST['title'] . "<br>";
             //echo $_POST['brand-description'] . "<br>";
-            echo $_POST['process_custom_images'];
+            //echo $_POST['process_custom_images'];
             $data = array(
                 'title'     => isset($_POST['title']) ? $_POST['title'] : '',
                 'description'   => isset($_POST['brand-description']) ? $_POST['brand-description'] : '',
-                'img' => isset($_POST['process_custom_images']) ? $_POST['process_custom_images'] : '',
+                'img' =>  isset($_POST['process_custom_images']) ? $_POST['process_custom_images'] : ''
             );
             //print_r($data);
             //exit;
@@ -70,11 +76,20 @@ class PlifeProductBrands
 
     function generate_product_brands_page()
     {
-        $this->all_brands();
+        if(isset($_GET['process']) && $_GET['process'] == 'brand' && isset($_GET['id']) && ! empty($_GET['id'])) {
+            $this->brand_inside($_GET['id']);
+        } else {
+            $this->all_brands();
+        }
+    }
+    function brand_inside($id)
+    {
+        $brand = $this->db->get_post_by_id($id);
+        print_r($brand);
     }
     function all_brands()
     {
-?>
+    ?>
         <style>
             .product-brands-container {
                 display: grid;
@@ -85,6 +100,11 @@ class PlifeProductBrands
 
             .product-brands-list-item {
                 padding-left: 5%;
+            }
+            .product-brands-new {
+                background: white;
+                padding: 2%;
+                box-shadow: 0px 0px 3px #c9c9c9;
             }
         </style>
         <div class="header-container">
@@ -150,9 +170,8 @@ class PlifeProductBrands
                                     wp.media.editor.send.attachment = function(props, attachment) {
                                         //id.val(attachment.id);
                                         $("#process_custom_images").val(attachment.id);
+                                        //$("#img-id").attr("value",attachment.id);
                                         $(".brand-img").attr("src", attachment.url);
-
-
                                     };
                                     wp.media.editor.open(button);
                                     return false;
@@ -177,10 +196,10 @@ class PlifeProductBrands
                             echo '<td>' . $i++ . '</td>';
                         ?>
                             <td>
-                                <a href="?page=home-page-builder&process=get-group&group=<?php echo $db_post->title; ?>"><?php echo $db_post->title; ?></a>
+                                <a href="edit.php?post_type=product&page=product-brands&process=brand&id=<?php echo $db_post->id; ?>"><?php echo $db_post->title; ?></a>
                             </td>
                             <td>
-                                <a href="?page=home-page-builder&process=remove-group&group=<?php echo $db_post->id; ?>" onclick="if (confirm('Delete selected item?')){return true;}else{ return false;}">Remove</a>
+                                <a href="edit.php?post_type=product&page=product-brands&process=remove&id=<?php echo $db_post->id; ?>" onclick="if (confirm('Delete selected item?')){return true;}else{ return false;}">Remove</a>
                             </td>
                         <?php
                             echo '</tr>';

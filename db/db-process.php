@@ -15,7 +15,10 @@ class plifeProductBrandsDbProcess {
     {
         global $wpdb;
         $table_home_page_builder = $wpdb->prefix . 'plife_wc_product_brands';
-        $wpdb->insert($table_home_page_builder,$data,array('%s','%s','%s'));
+        $wpdb->insert($table_home_page_builder,$data,array('%s','%s','%i'));
+        echo $wpdb->last_error."<br>";
+        echo $wpdb->last_query ;
+        exit;
     }
     function edit_post($data,$id)
     {

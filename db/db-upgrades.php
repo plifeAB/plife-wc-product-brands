@@ -25,9 +25,9 @@ class PlifeProductBrandsDbUpgrades {
             $table_name = $wpdb->prefix . 'plife_wc_product_brands';
             $sql = "CREATE TABLE IF NOT EXISTS $table_name (
 		                id mediumint(9) NOT NULL AUTO_INCREMENT,
-		                title text  NULL,
-		                description text NOT NULL,
-		                src text NOT NULL,
+		                title varchar(255) NOT  NULL,
+		                description text NULL,
+		                img bigint(20) NULL,
 		                UNIQUE KEY id (id)
 	                ) $charset_collate;";
             require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
